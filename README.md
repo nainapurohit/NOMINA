@@ -1,16 +1,152 @@
-# React + Vite
+# Nomina ✨
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A dynamic, responsive portfolio generator built with React and Tailwind CSS.
 
-Currently, two official plugins are available:
+Nomina allows users to create a live, editable portfolio preview using a simple form interface. The project focuses on UI structuring, state management, and theme switching with a clean SaaS-like layout.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 🚀 Live Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- ⚡ Real-time portfolio preview
+- 🎨 Light / Dark theme toggle
+- 🧩 Component-based form system (Input, Textarea)
+- 📱 Mobile-first responsive layout
+- 🪄 Live skill parsing (comma-separated input → tags)
+- 🧠 Structured portfolio sections (Hero, About, Skills, Projects)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Tech Stack
+
+- React (Vite)
+- Tailwind CSS
+- JavaScript (ES6+)
+- Functional Components + Hooks
+
+---
+
+## 📸 Preview Layout
+
+Nomina generates a live portfolio preview with:
+
+- Hero section (Name + Bio)
+- About section (static template)
+- Skills section (dynamic tags)
+- Projects section (placeholder for expansion)
+
+---
+
+## 🎯 Purpose of the Project
+
+This project was built to practice:
+
+- State management in React
+- Controlled form inputs
+- Component reusability
+- UI structuring and layout design
+- Theme switching using Tailwind CSS
+- Building SaaS-style interfaces
+
+---
+
+## 🌗 Theme System
+
+Nomina uses Tailwind’s class-based dark mode:
+
+- Light mode → default styling
+- Dark mode → .dark class applied to <html>
+
+Theme toggle is handled via:
+
+`js
+document.documentElement.classList.toggle("dark");
+
+---
+
+📦 Project Structure
+
+src/
+├── components/
+│ └── ui/
+│ ├── Input.jsx
+│ └── Textarea.jsx
+├── App.jsx
+├── main.jsx
+
+---
+
+💡 Key Learnings
+
+How to build reusable UI components
+
+Managing form state with useState
+
+Creating live preview UIs
+
+Structuring a React app like a real product
+
+Implementing theme switching without external libraries
+
+---
+
+🔮 Future Improvements
+
+Export portfolio as PDF
+
+Save templates locally (localStorage)
+
+Add multiple portfolio themes
+
+Add project card builder
+
+Add drag-and-drop section ordering
+
+Backend integration for saving profiles
+
+---
+
+🧑‍💻 Author
+
+Built as a learning + portfolio project focused on frontend development and UI engineering.
+
+---
+
+📌 Status
+
+🚧 In active development (UI phase completed, feature expansion next)
+
+---
+
+# 🧠 Why this README works
+
+This is not a generic README.
+
+It does 3 important things:
+
+### 1. Shows _what it does_ clearly
+
+Recruiters understand it in 5 seconds.
+
+### 2. Shows _technical depth_
+
+- Tailwind dark mode system
+- React state usage
+- component architecture
+
+### 3. Shows _growth mindset_
+
+Future improvements section = huge signal
+
+---
+
+# 🚀 What you should do next
+
+1. Add this README to your repo
+2. Push it
+3. Make sure your GitHub repo has:
+   - clean title (Nomina)
+   - good description
+   - screenshot (optional but powerful later)
+
+---
