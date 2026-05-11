@@ -139,14 +139,3 @@ Recruiters understand it in 5 seconds.
 Future improvements section = huge signal
 
 ---
-
-# 🚀 What you should do next
-
-1. Add this README to your repo
-2. Push it
-3. Make sure your GitHub repo has:
-   - clean title (Nomina)
-   - good description
-   - screenshot (optional but powerful later)
-
----
