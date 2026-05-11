@@ -116,23 +116,6 @@ Built as a learning + portfolio project focused on frontend development and UI e
 
 🚧 In active development (UI phase completed, feature expansion next)
 
----
-
-# 🧠 Why this README works
-
-This is not a generic README.
-
-It does 3 important things:
-
-### 1. Shows _what it does_ clearly
-
-Recruiters understand it in 5 seconds.
-
-### 2. Shows _technical depth_
-
-- Tailwind dark mode system
-- React state usage
-- component architecture
 
 ### 3. Shows _growth mindset_
 
