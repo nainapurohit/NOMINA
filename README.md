@@ -116,9 +116,3 @@ Built as a learning + portfolio project focused on frontend development and UI e
 
 🚧 In active development (UI phase completed, feature expansion next)
 
-
-### 3. Shows _growth mindset_
-
-Future improvements section = huge signal
-
----
