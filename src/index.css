@@ -1,3 +1,11 @@
 @import "tailwindcss";
 /* Enable dark mode via class */
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* PDF MODE FIX FOR HTML2CANVAS */
+.pdf-mode * {
+	color: #000 !important;
+	background: #fff !important;
+	border-color: #e5e5e5 !important;
+	box-shadow: none !important;
+}
