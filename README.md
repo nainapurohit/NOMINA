@@ -1,23 +1,28 @@
 # Nomina ✨
 
-A dynamic, responsive portfolio generator built with React and Tailwind CSS.
+A dynamic, responsive portfolio generator built with **React + Tailwind CSS**.
 
-Nomina allows users to create a live, editable portfolio preview using a simple form interface. The project focuses on UI structuring, state management, and theme switching with a clean SaaS-like layout.
+Nomina allows users to create a live, editable portfolio preview using a simple form interface.  
+The project focuses on UI structuring, state management, and theme switching with a clean SaaS-style layout.
 
 ---
 
-## 🚀 Live Features
+## 🚀 Features
 
 - ⚡ Real-time portfolio preview
 - 🎨 Light / Dark theme toggle
-- 🧩 Component-based form system (Input, Textarea)
+- 🧩 Reusable component-based form system
 - 📱 Mobile-first responsive layout
 - 🪄 Live skill parsing (comma-separated input → tags)
-- 🧠 Structured portfolio sections (Hero, About, Skills, Projects)
+- 🧠 Structured portfolio sections:
+  - Hero (Name + Bio)
+  - About
+  - Skills
+  - Projects
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠 Tech Stack
 
 - React (Vite)
 - Tailwind CSS
@@ -26,25 +31,25 @@ Nomina allows users to create a live, editable portfolio preview using a simple 
 
 ---
 
-## 📸 Preview Layout
+## 📸 What the App Generates
 
-Nomina generates a live portfolio preview with:
+Nomina creates a live portfolio preview containing:
 
 - Hero section (Name + Bio)
-- About section (static template)
+- About section (template text)
 - Skills section (dynamic tags)
-- Projects section (placeholder for expansion)
+- Projects section (expandable placeholders)
 
 ---
 
 ## 🎯 Purpose of the Project
 
-This project was built to practice:
+This project was built to practice and demonstrate:
 
-- State management in React
+- React state management
 - Controlled form inputs
 - Component reusability
-- UI structuring and layout design
+- UI structuring & layout design
 - Theme switching using Tailwind CSS
 - Building SaaS-style interfaces
 
@@ -52,19 +57,20 @@ This project was built to practice:
 
 ## 🌗 Theme System
 
-Nomina uses Tailwind’s class-based dark mode:
+Nomina uses Tailwind’s **class-based dark mode**.
 
 - Light mode → default styling
-- Dark mode → .dark class applied to <html>
+- Dark mode → `.dark` class applied to `<html>`
 
-Theme toggle is handled via:
+**Theme toggle logic:**
 
-`js
+```js
 document.documentElement.classList.toggle("dark");
+```
 
 ---
 
-📦 Project Structure
+## 🌗 Theme System
 
 src/
 ├── components/
@@ -76,42 +82,34 @@ src/
 
 ---
 
-💡 Key Learnings
+## 💡 Key Learnings
 
-How to build reusable UI components
-
-Managing form state with useState
-
-Creating live preview UIs
-
-Structuring a React app like a real product
-
-Implementing theme switching without external libraries
+- Building reusable UI components
+- Managing form state with `useState`
+- Creating live preview interfaces
+- Structuring a React app like a real product
+- Implementing theme switching without external libraries
 
 ---
 
-🔮 Future Improvements
+## 🔮 Future Improvements
 
-Export portfolio as PDF
-
-Save templates locally (localStorage)
-
-Add multiple portfolio themes
-
-Add project card builder
-
-Add drag-and-drop section ordering
-
-Backend integration for saving profiles
+- Export portfolio as PDF
+- Save templates locally using `localStorage`
+- Add multiple portfolio themes
+- Add project card builder
+- Add drag-and-drop section ordering
+- Backend integration for saving profiles
 
 ---
 
-🧑‍💻 Author
+## 🧑‍💻 Author
 
-Built as a learning + portfolio project focused on frontend development and UI engineering.
+Built as a learning + portfolio project focused on **frontend development and UI engineering**.
 
 ---
 
-📌 Status
+## 📌 Status
 
-🚧 In active development (UI phase completed, feature expansion next)
+🚧 In active development  
+UI phase completed → Feature expansion next.

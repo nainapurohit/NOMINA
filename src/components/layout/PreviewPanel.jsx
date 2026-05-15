@@ -1,149 +1,169 @@
-import { useRef } from "react";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+// PreviewPanel.jsx
+import React, { useRef, useState } from "react";
+import { buildHtmlTemplate } from "../pdf/template";
+import { generatePdfFromHtml } from "../pdf/pdfExporter";
+import { isValidHttpUrl } from "../pdf/utils";
 
-export default function PreviewPanel({ formData }) {
+/**
+ * PreviewPanel component
+ * - formData: { name, bio, skills, projects }
+ */
+export default function PreviewPanel({ formData = {} }) {
 	const previewRef = useRef();
+	const [isGenerating, setIsGenerating] = useState(false);
+	const [progress, setProgress] = useState("");
+
+	const a4WidthPx = 595;
+	const a4HeightPx = 842;
+
+	const onProgress = (info) => {
+		// info can be { step } or { step, page, totalPages } etc.
+		if (info.step === "slicing" && info.page && info.totalPages) {
+			setProgress(`Adding page ${info.page} of ${info.totalPages}...`);
+		} else if (info.step === "try-links") {
+			setProgress("Attempting link-preserving export...");
+		} else if (info.step === "fallback-images") {
+			setProgress("Falling back to image slicing...");
+		} else if (info.step === "create-iframe") {
+			setProgress("Preparing content...");
+		} else if (info.step === "insert-page-breaks") {
+			setProgress("Tuning page breaks...");
+		} else if (info.step === "server-render") {
+			setProgress("Uploading to server for rendering...");
+		} else {
+			setProgress(info.step || "");
+		}
+	};
 
 	const downloadPDF = async () => {
-		// Build clean HTML string (no Tailwind classes)
-		const htmlTemplate = `
-      <html>
-        <head>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              padding: 40px;
-              color: #000;
-              background: #fff;
-            }
-            h1 { font-size: 32px; margin-bottom: 10px; }
-            h2 { font-size: 14px; margin-top: 30px; text-transform: uppercase; }
-            p { color: #444; }
-            .chip {
-              display:inline-block;
-              padding:4px 10px;
-              border-radius:999px;
-              border:1px solid #ccc;
-              margin:4px;
-              font-size:12px;
-            }
-            .project {
-              border:1px solid #ddd;
-              border-radius:10px;
-              padding:16px;
-              margin-top:12px;
-            }
-            a { color: blue; }
-          </style>
-        </head>
-        <body>
-          <h1>${formData.name || "Your Name"}</h1>
-          <p>${formData.bio || "Your short professional bio will appear here"}</p>
+		if (isGenerating) return;
+		setIsGenerating(true);
+		setProgress("Starting export...");
 
-          <h2>About</h2>
-          <p>A passionate developer building clean, scalable web applications.</p>
-
-          <h2>Skills</h2>
-          <div>
-            ${
-							formData.skills
-								? formData.skills
-										.split(",")
-										.map((skill) => `<span class="chip">${skill.trim()}</span>`)
-										.join("")
-								: `<span>No skills added yet</span>`
-						}
-          </div>
-
-          <h2>Projects</h2>
-          ${
-						formData.projects && formData.projects.some((p) => p.title)
-							? formData.projects
-									.map(
-										(project) => `
-                      <div class="project">
-                        <h3>${project.title || "Untitled Project"}</h3>
-                        <p>${project.description || "Project description"}</p>
-                        ${
-													project.link
-														? `<a href="${project.link}" target="_blank">View Project →</a>`
-														: ""
-												}
-                      </div>
-                    `,
-									)
-									.join("")
-							: `<p>Your projects will appear here.</p>`
+		try {
+			// Basic validation: ensure links are http(s) or show warning in preview
+			if (Array.isArray(formData.projects)) {
+				for (const p of formData.projects) {
+					if (p && p.link && !isValidHttpUrl(p.link)) {
+						alert(
+							`Warning: project link "${p.link}" looks invalid and will not be included as a clickable link in the PDF.`,
+						);
+						break;
 					}
-        </body>
-      </html>
-    `;
+				}
+			}
 
-		// Create hidden iframe
-		const iframe = document.createElement("iframe");
-		iframe.style.position = "fixed";
-		iframe.style.right = "0";
-		iframe.style.bottom = "0";
-		iframe.style.width = "800px";
-		iframe.style.height = "1100px";
-		iframe.style.border = "none";
-		iframe.style.visibility = "hidden";
-		document.body.appendChild(iframe);
+			const html = buildHtmlTemplate(formData, { a4WidthPx, a4HeightPx });
 
-		const doc = iframe.contentWindow.document;
-		doc.open();
-		doc.write(htmlTemplate);
-		doc.close();
+			const result = await generatePdfFromHtml(html, {
+				a4WidthPx,
+				a4HeightPx,
+				onProgress,
+				useServer: false, // set true if you have a server endpoint
+				serverEndpoint: "/api/render-pdf",
+			});
 
-		// Wait for render
-		await new Promise((resolve) => setTimeout(resolve, 500));
-
-		// Screenshot iframe
-		const canvas = await html2canvas(doc.body, {
-			scale: 2,
-			backgroundColor: "#ffffff",
-		});
-
-		document.body.removeChild(iframe);
-
-		// Create PDF
-		const imgData = canvas.toDataURL("image/png");
-		const pdf = new jsPDF({
-			orientation: "portrait",
-			unit: "px",
-			format: "a4",
-		});
-
-		const imgWidth = 595;
-		const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-		pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-		pdf.save("MyPortfolio.pdf");
+			if (!result.success) {
+				// eslint-disable-next-line no-alert
+				alert("PDF generation failed. Check console for details.");
+			}
+		} catch (err) {
+			console.error("Export error:", err);
+			alert("An unexpected error occurred while generating the PDF.");
+		} finally {
+			setIsGenerating(false);
+			setProgress("");
+		}
 	};
 
 	return (
-		<section className="w-full md:w-1/2 p-6 flex flex-col bg-transparent">
+		<section className="w-full md:w-1/2 p-6 flex flex-col">
 			<div className="flex justify-end mb-4">
 				<button
 					onClick={downloadPDF}
-					className="px-4 py-2 rounded-lg border border-black/20 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/10 transition">
-					Download PDF
+					disabled={isGenerating}
+					className={`px-4 py-2 rounded-lg border border-black/20 dark:border-white/20 transition ${
+						isGenerating
+							? "opacity-60 cursor-not-allowed"
+							: "hover:bg-black/5 dark:hover:bg-white/10"
+					}`}>
+					{isGenerating ? "Generating PDF..." : "Download PDF"}
 				</button>
 			</div>
+
+			{isGenerating && (
+				<div className="mb-4 text-sm text-gray-600">
+					<strong>Export:</strong> {progress}
+				</div>
+			)}
+
 			<div
 				ref={previewRef}
 				className="border border-black/10 dark:border-white/10 rounded-xl p-8 flex-1 overflow-y-auto min-h-0">
-				{/* Normal Tailwind preview for on-screen display */}
 				<div className="mb-8">
-					<h1 className="text-4xl font-bold tracking-tight">
-						{formData.name || "Your Name"}
-					</h1>
-					<p className="mt-3 text-black/70 dark:text-white/70 text-lg leading-relaxed">
+					<h1 className="text-4xl font-bold">{formData.name || "Your Name"}</h1>
+					<p className="mt-3 opacity-70 text-lg">
 						{formData.bio || "Your short professional bio will appear here"}
 					</p>
 				</div>
-				{/* ... keep your Tailwind preview here ... */}
+
+				<div className="mb-8">
+					<h2 className="text-sm font-semibold uppercase opacity-60">Skills</h2>
+					<div className="mt-3 flex flex-wrap gap-2">
+						{formData.skills ? (
+							formData.skills.split(",").map((skill, i) => (
+								<span
+									key={i}
+									className="px-3 py-1 border rounded-full text-sm">
+									{skill.trim()}
+								</span>
+							))
+						) : (
+							<span className="opacity-50 text-sm">No skills added yet</span>
+						)}
+					</div>
+				</div>
+
+				<div>
+					<h2 className="text-sm font-semibold uppercase opacity-60">
+						Projects
+					</h2>
+
+					{Array.isArray(formData.projects) &&
+					formData.projects.some((p) => p && p.title) ? (
+						<div className="mt-4 grid gap-4">
+							{formData.projects.map((project, i) => (
+								<div
+									key={i}
+									className="p-4 border rounded-lg project">
+									<h3 className="font-semibold text-lg">
+										{project.title || "Untitled Project"}
+									</h3>
+									<p className="mt-2 opacity-70">
+										{project.description || "Project description"}
+									</p>
+									{project.link && isValidHttpUrl(project.link) ? (
+										<a
+											href={project.link}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="underline text-sm mt-2 inline-block">
+											View Project →
+										</a>
+									) : project.link ? (
+										<div className="text-xs text-red-500 mt-2">
+											Invalid link
+										</div>
+									) : null}
+								</div>
+							))}
+						</div>
+					) : (
+						<div className="mt-3 opacity-50 text-sm">
+							Your projects will appear here.
+						</div>
+					)}
+				</div>
 			</div>
 		</section>
 	);
